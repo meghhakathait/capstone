@@ -16,9 +16,10 @@ export async function registerUser(
     return { error: "All fields are required" };
   }
 
+  // Check if the user already exists in the database
   const existingUser = await db.orm.public.User.where({ email }).first();
   if (existingUser) {
-    //existing to nhi hai user check krne k liye
+   
     // throw new Error("An account with this email is already registered");
     return { error: "An account with this email is already registered" };
   }
@@ -37,6 +38,9 @@ export async function registerUser(
     await db.orm.public.Wishlist.create({ userId: newUser.id });
   }
 
-  //create where and all ye hame prisma provide kr rha hai
+  //create, where and all ye hame prisma provide kr rha hai
   redirect("/login");
 }
+
+
+//action function is used to handle the form submission. 
