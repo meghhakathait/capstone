@@ -24,6 +24,7 @@ export async function loginUser(
   if (!passwordMatches) {
     return { error: "Invalid Credentials" };
   }
+  //we donot use this method in every website to check email and password separately
 
   const token = signToken(user.id);  //token mai save kiya then cokkie mai 
   const cookieStore = await cookies();
@@ -41,4 +42,4 @@ export async function loginUser(
   redirect("/");
 }
 
-//we donot use this method in every website to check email and password separately
+

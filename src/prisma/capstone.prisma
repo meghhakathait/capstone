@@ -13,6 +13,12 @@ enum OrderStatus {
   CANCELLED
 }
 
+enum PaymentMethod {
+  CASH_ON_DELIVERY
+  UPI
+  CARD
+}
+
 model User {
   id         Int      @id @default(autoincrement())
   email      String   @unique
@@ -54,12 +60,22 @@ model Cart {
   items     CartItem[]
 }
 
+model CartItem {
+  id         Int      @id @default(autoincrement())
+  cart       Cart     @relation(fields:[cartId], references:[id])
+  cartId     Int 
+  product    Product  @relation(fields:[productId], references:[id])
+  productId  Int
+  quantity   Int      @default(1)
+}
+
 model Wishlist {
   id        Int              @id @default(autoincrement())
   user      User             @relation(fields:[userId], references:[id]) 
   userId    Int      
   items     WishlistItem[]
 }
+
 
 model WishlistItem {
   id             Int          @id @default(autoincrement())
@@ -69,14 +85,6 @@ model WishlistItem {
   productId      Int
 }
 
-model CartItem {
-  id         Int      @id @default(autoincrement())
-  cart       Cart     @relation(fields:[cartId], references:[id])
-  cartId     Int 
-  product    Product  @relation(fields:[productId], references:[id])
-  productId  Int
-  quantity   Int      @default(1)
-}
 
 model Address {
   id          Int       @id @default(autoincrement())
@@ -92,13 +100,14 @@ model Address {
 }
 
 model Order {
-  id             Int           @id @default(autoincrement())
-  user           User          @relation(fields:[userId], references:[id]) 
+  id             Int              @id @default(autoincrement())
+  user           User             @relation(fields:[userId], references:[id]) 
   userId         Int    
   total          Float
-  status         OrderStatus   @default(PENDING)
+  status         OrderStatus      @default(PENDING)
   addressText    String        
-  orderItems     OrderItem[]
+  paymentMethod  PaymentMethod    @default(CASH_ON_DELIVERY)
+  orderItems     OrderItem[] 
   createdAt      TimestamptzString @default(now())
   updatedAt      temporal.updatedAtString()
 }
@@ -111,4 +120,13 @@ model OrderItem {
   productId   Int
   quantity    Int
   price       Float
+}
+
+modal  SliderItem{
+  id            Int       @id @default(autoincrement()) 
+  title         String  
+  description   String
+  imageUrl      String
+  cta           String 
+  order         Int         
 }

@@ -5,7 +5,7 @@ const JWT_SECRET = process.env.JWT_SECRET as string;
 // }
 export function signToken(userId: number): string {
   return jwt.sign({ userId }, JWT_SECRET, { expiresIn: "7d" });
-} //iss funct se token banate hai
+} //iss func se token banate hai
 
 export function verifyToken(token: string): { userId: number } | null { //we can use interface also
   try {

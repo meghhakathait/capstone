@@ -74,6 +74,23 @@
               }
             ]
           },
+          "PaymentMethod": {
+            "codecId": "pg/text@1",
+            "members": [
+              {
+                "name": "CASH_ON_DELIVERY",
+                "value": "CASH_ON_DELIVERY"
+              },
+              {
+                "name": "UPI",
+                "value": "UPI"
+              },
+              {
+                "name": "CARD",
+                "value": "CARD"
+              }
+            ]
+          },
           "Role": {
             "codecId": "pg/text@1",
             "members": [
@@ -434,6 +451,19 @@
                   "kind": "scalar"
                 }
               },
+              "paymentMethod": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                },
+                "valueSet": {
+                  "entityKind": "enum",
+                  "entityName": "PaymentMethod",
+                  "namespaceId": "public",
+                  "plane": "domain"
+                }
+              },
               "status": {
                 "nullable": false,
                 "type": {
@@ -512,6 +542,9 @@
                 },
                 "id": {
                   "column": "id"
+                },
+                "paymentMethod": {
+                  "column": "paymentMethod"
                 },
                 "status": {
                   "column": "status"
@@ -1308,6 +1341,11 @@
             "Order": {
               "checks": [
                 {
+                  "expression": "\"paymentMethod\" IN ('CASH_ON_DELIVERY', 'UPI', 'CARD')",
+                  "name": "Order_paymentMethod_check_66c9984e",
+                  "prefix": "Order_paymentMethod_check"
+                },
+                {
                   "expression": "\"status\" IN ('PENDING', 'PAID', 'SHIPPED', 'DELIVERED', 'CANCELLED')",
                   "name": "Order_status_check_7faa5f63",
                   "prefix": "Order_status_check"
@@ -1336,6 +1374,21 @@
                   },
                   "nativeType": "int4",
                   "nullable": false
+                },
+                "paymentMethod": {
+                  "codecId": "pg/text@1",
+                  "default": {
+                    "kind": "literal",
+                    "value": "CASH_ON_DELIVERY"
+                  },
+                  "nativeType": "text",
+                  "nullable": false,
+                  "valueSet": {
+                    "entityKind": "valueSet",
+                    "entityName": "PaymentMethod",
+                    "namespaceId": "public",
+                    "plane": "storage"
+                  }
                 },
                 "status": {
                   "codecId": "pg/text@1",
@@ -1812,6 +1865,14 @@
                 "CANCELLED"
               ]
             },
+            "PaymentMethod": {
+              "kind": "valueSet",
+              "values": [
+                "CASH_ON_DELIVERY",
+                "UPI",
+                "CARD"
+              ]
+            },
             "Role": {
               "kind": "valueSet",
               "values": [
@@ -1825,7 +1886,7 @@
         "kind": "postgres-schema"
       }
     },
-    "storageHash": "861ed02ce031f29c1c2e6b0bf3c6eb2dc85b9b90730f4d1cb4173ca015af7d2b"
+    "storageHash": "e6f0a5183527501462e08be61034816eb52e97f73647382165d2a3c20e5effdf"
   },
   "execution": {
     "executionHash": "2f9ea11a1ed41448b8afe6b2db6185f6902583add9bbebe65b7a0604b6ea14d4",

@@ -3,7 +3,7 @@
 import { useActionState } from "react";
 import { loginUser } from "./action";
 
-const initialState = { error: undefined };
+const initialState = { error: undefined }; //agr first mai humko empty rakhna hai tb use kr skte hai
 export default function LoginForm() {
   const [state, formAction, isPending] = useActionState(
     loginUser,
