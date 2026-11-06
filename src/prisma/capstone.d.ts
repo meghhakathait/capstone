@@ -34,7 +34,7 @@ import type {
 } from '@prisma/orm-postgres/contract/types';
 
 export type StorageHash =
-  StorageHashBase<'861ed02ce031f29c1c2e6b0bf3c6eb2dc85b9b90730f4d1cb4173ca015af7d2b'>;
+  StorageHashBase<'e6f0a5183527501462e08be61034816eb52e97f73647382165d2a3c20e5effdf'>;
 export type ExecutionHash =
   ExecutionHashBase<'2f9ea11a1ed41448b8afe6b2db6185f6902583add9bbebe65b7a0604b6ea14d4'>;
 export type ProfileHash =
@@ -280,6 +280,7 @@ export type FieldOutputTypes = {
       readonly addressText: CodecTypes['pg/text@1']['output'];
       readonly createdAt: CodecTypes['pg/timestamptz-string@1']['output'];
       readonly id: CodecTypes['pg/int4@1']['output'];
+      readonly paymentMethod: 'CASH_ON_DELIVERY' | 'UPI' | 'CARD';
       readonly status: 'PENDING' | 'PAID' | 'SHIPPED' | 'DELIVERED' | 'CANCELLED';
       readonly total: CodecTypes['pg/float8@1']['output'];
       readonly updatedAt: CodecTypes['pg/timestamptz-string@1']['output'];
@@ -355,6 +356,7 @@ export type FieldInputTypes = {
       readonly addressText: CodecTypes['pg/text@1']['input'];
       readonly createdAt: CodecTypes['pg/timestamptz-string@1']['input'];
       readonly id: CodecTypes['pg/int4@1']['input'];
+      readonly paymentMethod: 'CASH_ON_DELIVERY' | 'UPI' | 'CARD';
       readonly status: 'PENDING' | 'PAID' | 'SHIPPED' | 'DELIVERED' | 'CANCELLED';
       readonly total: CodecTypes['pg/float8@1']['input'];
       readonly updatedAt: CodecTypes['pg/timestamptz-string@1']['input'];
@@ -430,6 +432,7 @@ export type StorageColumnTypes = {
       readonly addressText: CodecTypes['pg/text@1']['output'];
       readonly createdAt: CodecTypes['pg/timestamptz-string@1']['output'];
       readonly id: CodecTypes['pg/int4@1']['output'];
+      readonly paymentMethod: 'CASH_ON_DELIVERY' | 'UPI' | 'CARD';
       readonly status: 'PENDING' | 'PAID' | 'SHIPPED' | 'DELIVERED' | 'CANCELLED';
       readonly total: CodecTypes['pg/float8@1']['output'];
       readonly updatedAt: CodecTypes['pg/timestamptz-string@1']['output'];
@@ -505,6 +508,7 @@ export type StorageColumnInputTypes = {
       readonly addressText: CodecTypes['pg/text@1']['input'];
       readonly createdAt: CodecTypes['pg/timestamptz-string@1']['input'];
       readonly id: CodecTypes['pg/int4@1']['input'];
+      readonly paymentMethod: 'CASH_ON_DELIVERY' | 'UPI' | 'CARD';
       readonly status: 'PENDING' | 'PAID' | 'SHIPPED' | 'DELIVERED' | 'CANCELLED';
       readonly total: CodecTypes['pg/float8@1']['input'];
       readonly updatedAt: CodecTypes['pg/timestamptz-string@1']['input'];
@@ -590,6 +594,7 @@ export namespace Models {
     addressText: CodecTypes['pg/text@1']['output'];
     createdAt: CodecTypes['pg/timestamptz-string@1']['output'];
     id: CodecTypes['pg/int4@1']['output'];
+    paymentMethod: 'CASH_ON_DELIVERY' | 'UPI' | 'CARD';
     status: 'PENDING' | 'PAID' | 'SHIPPED' | 'DELIVERED' | 'CANCELLED';
     total: CodecTypes['pg/float8@1']['output'];
     updatedAt: CodecTypes['pg/timestamptz-string@1']['output'];
@@ -921,6 +926,15 @@ type ContractBase = Omit<
                   readonly default: {
                     readonly kind: 'function';
                     readonly expression: 'autoincrement()';
+                  };
+                };
+                readonly paymentMethod: {
+                  readonly nativeType: 'text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: false;
+                  readonly default: {
+                    readonly kind: 'literal';
+                    readonly value: DefaultLiteralValue<'pg/text@1', 'CASH_ON_DELIVERY'>;
                   };
                 };
                 readonly status: {
@@ -1295,6 +1309,10 @@ type ContractBase = Omit<
               readonly kind: 'valueSet';
               readonly values: readonly ['PENDING', 'PAID', 'SHIPPED', 'DELIVERED', 'CANCELLED'];
             };
+            readonly PaymentMethod: {
+              readonly kind: 'valueSet';
+              readonly values: readonly ['CASH_ON_DELIVERY', 'UPI', 'CARD'];
+            };
             readonly Role: {
               readonly kind: 'valueSet';
               readonly values: readonly ['CUSTOMER', 'ADMIN'];
@@ -1544,6 +1562,10 @@ type ContractBase = Omit<
                 readonly nullable: false;
                 readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
               };
+              readonly paymentMethod: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
               readonly status: {
                 readonly nullable: false;
                 readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
@@ -1593,6 +1615,7 @@ type ContractBase = Omit<
                 readonly addressText: { readonly column: 'addressText' };
                 readonly createdAt: { readonly column: 'createdAt' };
                 readonly id: { readonly column: 'id' };
+                readonly paymentMethod: { readonly column: 'paymentMethod' };
                 readonly status: { readonly column: 'status' };
                 readonly total: { readonly column: 'total' };
                 readonly updatedAt: { readonly column: 'updatedAt' };
@@ -1934,6 +1957,14 @@ type ContractBase = Omit<
               { readonly name: 'SHIPPED'; readonly value: 'SHIPPED' },
               { readonly name: 'DELIVERED'; readonly value: 'DELIVERED' },
               { readonly name: 'CANCELLED'; readonly value: 'CANCELLED' },
+            ];
+          };
+          readonly PaymentMethod: {
+            readonly codecId: 'pg/text@1';
+            readonly members: readonly [
+              { readonly name: 'CASH_ON_DELIVERY'; readonly value: 'CASH_ON_DELIVERY' },
+              { readonly name: 'UPI'; readonly value: 'UPI' },
+              { readonly name: 'CARD'; readonly value: 'CARD' },
             ];
           };
           readonly Role: {
