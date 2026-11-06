@@ -1,0 +1,60 @@
+import { db } from "@/prisma/db";
+import Image from "next/image";
+import { notFound } from "next/navigation";
+
+//to get single value in a different PAGE we have to get value from the url
+
+//we pass id nd the function get data from the DB
+
+async function getProduct(id: string) {
+  return db.orm.public.Product.include("category") //jb koi or table se data include kerana hai jo realtion mai already hai current table k sath
+    .where({ id: Number(id) })
+    .first(); // first returns the object ({id:1, name:"tshirt"}) or null not the whole arr of obj
+}
+
+//url se jo id milri uss basis se database se get krna ha
+export default async function ProductDetailsPage({
+  params, //after slash we can get all value from the url with using inbluit property params
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  const { id } = await params; // destructing
+  const product = await getProduct(id); // we pass the id using
+  //  params it to getProduct function
+
+  if (!product) {
+    notFound();
+  } // if product not found  nd if we found then below code will run
+
+  return (
+    <div className="grid md:grid-cols-2 gap-8 p-6">
+      <Image
+        src={product.imageUrl}
+        alt={product.name}
+        width={500}
+        height={500}
+        className="rounded-lg object cover"
+      />
+      <div>
+        <p className="text-sm text-gray-400">{product.category.name}</p>
+        <h1 className="text-2xl font-bold mt-1">{product.name}</h1>
+        <p className="text-xl text-gray-300 mt-2">{product.price}</p>
+        <p className=" mt-4">{product.description}</p>
+        <p>
+          {product.inStock ? <span>In Stock</span> : <span>Out of Stock</span>}
+        </p>
+        <div className="flex">
+          <button className="bg-amber-200 px-8 py-2">Add To Wishlist</button>
+        </div>
+        <div className="flex">
+          <button
+            disabled={!product.inStock}
+            className="bg-amber-200 px-8 py-2 disabled:opacity-40"
+          >
+            Add To Cart
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
